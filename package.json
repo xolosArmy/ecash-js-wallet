@@ -1,0 +1,16 @@
+{
+  "name": "ecash-js-wallet",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bitcore-lib-cash": "^10.10.5",
+    "ecashaddrjs": "^2.0.0"
+  }
+}
