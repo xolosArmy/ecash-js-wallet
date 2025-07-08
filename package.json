@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "bitcore-lib-cash": "^10.10.5",
-    "ecashaddrjs": "^2.0.0"
+    "ecashaddrjs": "^2.0.0",
+    "axios": "^1.6.8"
   }
 }

@@ -17,3 +17,18 @@ Generador simple de carteras (wallets) de eCash en Node.js usando `bitcore-lib-c
 git clone https://github.com/xolosArmy/ecash-js-wallet.git
 cd ecash-js-wallet
 npm install
+```
+
+## ⛏️ Uso
+
+Genera una nueva wallet:
+
+```bash
+node wallet.js
+```
+
+Consulta el saldo de la dirección generada en `wallet.json`:
+
+```bash
+node check-balance.js
+```
