@@ -9,9 +9,6 @@ console.log('🔵 Dirección que se está consultando:', address);
 
 // Endpoint Chronik funcional
 const chronik = 'https://chronik-native1.fabien.cash';
-axios.get(`${chronik}/v1/address/${address}`)
-
-
 // Llamada a la API de Chronik
 axios.get(`${chronik}/v1/address/${address}`)
   .then(response => {
