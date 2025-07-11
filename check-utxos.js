@@ -1,41 +1,38 @@
-const { ChronikClient } = require("chronik-client");
-const ecashaddr = require("ecashaddrjs");
-const fs = require("fs");
+// ---------------- check-utxos.js ----------------
+const fs                = require('fs');
+const { ChronikClient } = require('chronik-client');
 
-// Leer wallet
-const wallet = JSON.parse(fs.readFileSync("wallet.json"));
-const ecashAddress = wallet.cashAddr;
+// lee wallet.json
+const { cashAddr } = JSON.parse(fs.readFileSync('wallet.json', 'utf8'));
 
-// Decodificar dirección ecash
-const decoded = ecashaddr.decodeCashAddress(ecashAddress);
-const type = decoded.type; // debe ser 'P2PKH'
-const hash160 = Buffer.from(decoded.hash).toString("hex");
-
-// Cliente Chronik
-const chronik = new ChronikClient("https://chronik.e.cash/xec");
+// Chronik público (mainnet)
+const chronik = new ChronikClient('https://chronik-native1.fabien.cash');
 
 (async () => {
   try {
-    console.log("📫 Consultando UTXOs de:", ecashAddress);
-    const result = await chronik.script("p2pkh", hash160).utxos();
+    console.log(`🔎  Consultando UTXOs de  ${cashAddr}`);
 
-    if (!result.utxos || result.utxos.length === 0) {
-      console.warn("⚠️ No hay UTXOs disponibles (sin fondos)");
+    // chronik.address(...).utxos() → {utxos, numPages}
+    const { utxos } = await chronik.address(cashAddr).utxos();
+    if (!utxos.length) {
+      console.warn('⚠️  No hay UTXOs (balance = 0)');
       return;
     }
 
-    console.log("✅ UTXOs encontrados:");
-    result.utxos.forEach((utxo, idx) => {
-      console.log(
-        `#${idx + 1}: txid=${utxo.outpoint.txid} | vout=${utxo.outpoint.outIdx} | valor=${utxo.value} sats`
-      );
-    });
+    // muestra tabla rápida
+    console.table(
+      utxos.map(u => ({
+        txid : u.outpoint.txid,
+        vout : u.outpoint.outIdx,
+        value: (u.value / 100) + ' XEC',
+        blk  : u.blockHeight,
+      }))
+    );
+    const total = utxos.reduce((s, u) => s + u.value, 0) / 100;
+    console.log(`💰  Total disponible: ${total} XEC`);
   } catch (err) {
-    if (err.status === 404) {
-      console.error("❌ No se encontró script para esta dirección (404)");
-    } else {
-      console.error("❌ Error:", err.message || err);
-    }
+    console.error('❌', err.message || err);
   }
 })();
+
 
